@@ -6,12 +6,19 @@ Enemy = {
     attack_cooldown = 0,
     retarget_timer = 0,
     special_cooldown = 0,
+    stun_timer = 0,
     target_kind = "altar",
     alive = true,
 
     OnStart = function(self)
         self.transform = self.actor:GetComponent("Transform")
         self.sprite = self.actor:GetComponent("SpriteRenderer")
+        local min_x, max_x, min_y, max_y =
+            Shared.GetStageBounds(Scene.GetCurrent())
+        self.min_x = min_x
+        self.max_x = max_x
+        self.min_y = min_y
+        self.max_y = max_y
         self:SetKind(self.enemy_kind)
     end,
 
@@ -28,6 +35,13 @@ Enemy = {
         end
         if self.special_cooldown > 0 then
             self.special_cooldown = self.special_cooldown - 1
+        end
+        if self.stun_timer > 0 then
+            self.stun_timer = self.stun_timer - 1
+            self:UpdateSprite(0.0, 0.0, self.last_face_x or 0.0,
+                              self.last_face_y or 1.0)
+            self:UpdateHealthDisplay()
+            return
         end
 
         local target = self:ResolveTarget()
@@ -48,19 +62,24 @@ Enemy = {
             else
                 move_x = nx
                 move_y = ny
-                self.transform.x = self.transform.x + nx * self.def.speed
-                self.transform.y = self.transform.y + ny * self.def.speed
+                self.transform.x = Shared.Clamp(
+                                       self.transform.x + nx * self.def.speed,
+                                       self.min_x + self:GetHitRadius(),
+                                       self.max_x - self:GetHitRadius())
+                self.transform.y = Shared.Clamp(
+                                       self.transform.y + ny * self.def.speed,
+                                       self.min_y + self:GetHitRadius(),
+                                       self.max_y - self:GetHitRadius())
             end
         end
 
         self:MaybeUseSpecial(target, face_x, face_y, target_distance)
         self:UpdateSprite(move_x, move_y, face_x, face_y)
-        self:DrawHealthNumber()
+        self:UpdateHealthDisplay()
     end,
 
     OnDestroy = function(self)
-        -- Enemy health is drawn as transient text, so there are no child
-        -- visual actors to clean up when the enemy actor is destroyed.
+        Shared.DestroyHealthVisuals(self.boss_health_visuals)
     end,
 
     SetKind = function(self, kind)
@@ -70,8 +89,15 @@ Enemy = {
         self.max_health = self.def.max_hp
         self.health = self.def.max_hp
         self.alive = true
+        self.stun_timer = 0
         self.target_kind = self.def.target == "random" and "altar" or
                                self.def.target
+        Shared.DestroyHealthVisuals(self.boss_health_visuals)
+        self.boss_health_visuals = nil
+        if self.def.is_boss then
+            self.boss_health_visuals =
+                Shared.CreateHealthVisuals(math.ceil(self.max_health / 2))
+        end
         self.special_cooldown = math.random(
                                     self.def.special_initial_cooldown_min or
                                         80,
@@ -113,7 +139,21 @@ Enemy = {
         local dx = target:GetPositionX() - self.transform.x
         local dy = target:GetPositionY() - self.transform.y
         local nx, ny = Shared.Normalize(dx, dy)
+        if self.def.is_boss and target.IsShieldActive ~= nil and
+            target:IsShieldActive() then
+            -- Boss melee can be parried too, but this parry stuns instead of
+            -- reflecting damage back into the enemy.
+            self:Stun(60)
+            Shared.PlaySfx(14, {"shieldblock"}, 92)
+            return
+        end
         target:TakeDamage(self.def.damage or 1, nx, ny)
+    end,
+
+    Stun = function(self, frames)
+        self.stun_timer = math.max(self.stun_timer or 0, frames or 30)
+        self.attack_timer = 0
+        self.attack_cooldown = math.max(self.attack_cooldown or 0, 18)
     end,
 
     MaybeUseSpecial = function(self, target, face_x, face_y, distance)
@@ -165,14 +205,18 @@ Enemy = {
             -- Apply knockback immediately; these enemies are script-driven, not physics-driven.
             self.transform.x = Shared.Clamp(
                                    self.transform.x + (knockback_x or 0.0),
-                                   -3.1, 3.1)
+                                   self.min_x + self:GetHitRadius(),
+                                   self.max_x - self:GetHitRadius())
             self.transform.y = Shared.Clamp(
                                    self.transform.y + (knockback_y or 0.0),
-                                   -1.6, 1.6)
+                                   self.min_y + self:GetHitRadius(),
+                                   self.max_y - self:GetHitRadius())
         end
 
         if self.health <= 0 then
             self.alive = false
+            Shared.DestroyHealthVisuals(self.boss_health_visuals)
+            self.boss_health_visuals = nil
             Actor.Destroy(self.actor)
         end
     end,
@@ -186,6 +230,8 @@ Enemy = {
             face_x = move_x
             face_y = move_y
         end
+        self.last_face_x = face_x
+        self.last_face_y = face_y
 
         local row, flip = Shared.DirectionRow(self.def.direction,
                                                         face_x, face_y)
@@ -207,6 +253,36 @@ Enemy = {
         self.sprite.sorting_order =
             Shared.SortOrder(self.transform.y, 70)
         self.sprite.auto_sorting_order = false
+        if self.stun_timer ~= nil and self.stun_timer > 0 then
+            self.sprite.r = 170
+            self.sprite.g = 210
+            self.sprite.b = 255
+        else
+            self.sprite.r = 255
+            self.sprite.g = 255
+            self.sprite.b = 255
+        end
+        self.sprite.a = 255
+    end,
+
+    UpdateHealthDisplay = function(self)
+        if self:IsBoss() then
+            self:UpdateBossHealthUI()
+        else
+            self:DrawHealthNumber()
+        end
+    end,
+
+    UpdateBossHealthUI = function(self)
+        if self.boss_health_visuals == nil then
+            return
+        end
+
+        local window_width = Shared.GetWindowSize()
+        local ui_x, ui_y = Shared.ScreenToWorld(window_width * 0.5, 96)
+        -- Boss health is promoted to HUD space so the player can track the duel.
+        Shared.UpdateHealthVisuals(self.boss_health_visuals, ui_x, ui_y,
+                                   self.health, self.max_health, 1.02, 3300)
     end,
 
     DrawHealthNumber = function(self)

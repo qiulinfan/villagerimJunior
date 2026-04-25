@@ -7,13 +7,16 @@ HUD = {
             return
         end
 
+        local window_width, window_height = Shared.GetWindowSize()
         local stage = director:GetStage()
         local title = "VillageRimJr"
         if stage ~= nil then
             if stage.victory then
-                Text.Draw(stage.title or "The Village Breathes Again", 150,
-                          86, "NotoSans-Regular", 26, 240, 232, 205, 255)
-                Text.Draw(stage.objective or "The rim holds.", 126, 122,
+                Text.Draw(stage.title or "The Village Breathes Again",
+                          window_width * 0.5 - 185, window_height * 0.40,
+                          "NotoSans-Regular", 26, 240, 232, 205, 255)
+                Text.Draw(stage.objective or "For now...",
+                          window_width * 0.5 - 88, window_height * 0.47,
                           "NotoSans-Regular", 16, 210, 202, 180, 255)
                 return
             else
@@ -23,7 +26,7 @@ HUD = {
         end
 
         -- Keep combat HUD sparse: one status line, one control line.
-        Text.Draw(title, 18, 14, "NotoSans-Regular", 23, 20, 30, 18, 255)
+        Text.Draw(title, 18, 6, "NotoSans-Regular", 23, 20, 30, 18, 255)
 
         local controls = "1 sword | left click to attack"
         local state = Shared.GetRunState()
@@ -33,6 +36,7 @@ HUD = {
         if state.shield then
             controls = controls .. " | right hold to use shield"
         end
-        Text.Draw(controls, 18, 334, "NotoSans-Regular", 14, 28, 38, 24, 255)
+        Text.Draw(controls, 18, window_height - 26, "NotoSans-Regular", 14,
+                  28, 38, 24, 255)
     end
 }

@@ -47,7 +47,8 @@ Director = {
         end
 
         Camera.SetPosition(0.0, 0.0)
-        Camera.SetZoom(1.0)
+        -- Keep world sprites comfortably readable in the larger 960x540 window.
+        Camera.SetZoom(self.stage.camera_zoom or 1.2)
         Shared.PlayMusicOnce(self.stage.music)
 
         self:SpawnCoreActors()
@@ -127,6 +128,7 @@ Director = {
                 local player_component = player:GetComponent("Player")
                 if player_component ~= nil then
                     player_component:SetStage(self.stage_name)
+                    player_component:UpdateCamera()
                 end
             end
         end

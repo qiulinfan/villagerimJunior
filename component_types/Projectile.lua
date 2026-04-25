@@ -27,8 +27,12 @@ Projectile = {
         self.transform.y = self.transform.y + self.vy * self.speed
         self:UpdateSprite()
 
-        if self.life <= 0 or math.abs(self.transform.x) > 3.35 or
-            math.abs(self.transform.y) > 1.9 then
+        local min_x, max_x, min_y, max_y =
+            Shared.GetStageBounds(Scene.GetCurrent())
+        if self.life <= 0 or self.transform.x < min_x - 0.45 or
+            self.transform.x > max_x + 0.45 or
+            self.transform.y < min_y - 0.45 or
+            self.transform.y > max_y + 0.45 then
             self:DestroySelf()
             return
         end
@@ -46,9 +50,8 @@ Projectile = {
                                      self.transform.x, self.transform.y,
                                      enemy:GetPositionX(), enemy:GetPositionY())
                 if distance <= self.radius + enemy:GetHitRadius() then
-                    -- Arrows inherit their flight direction as knockback.
-                    enemy:TakeDamage(self.damage, self.vx * 0.18,
-                                     self.vy * 0.18)
+                    -- Arrows are piercing damage feedback only; sword hits own knockback.
+                    enemy:TakeDamage(self.damage, 0.0, 0.0)
                     self:DestroySelf()
                     return
                 end

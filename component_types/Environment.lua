@@ -32,6 +32,8 @@ Environment = {
 
     SpawnCrops = function(self)
         local count = self.stage.decoration_count or 64
+        local min_x, max_x, min_y, max_y =
+            Shared.GetStageBounds(Scene.GetCurrent())
         local altar_x = self.stage.altar_x or 0.0
         local altar_y = self.stage.altar_y or 0.0
         local player_x = self.stage.player_x or 0.0
@@ -41,8 +43,8 @@ Environment = {
             local x = 0.0
             local y = 0.0
             for attempt = 1, 12 do
-                x = Shared.RandomRange(-3.0, 3.0)
-                y = Shared.RandomRange(-1.55, 1.55)
+                x = Shared.RandomRange(min_x + 0.22, max_x - 0.22)
+                y = Shared.RandomRange(min_y + 0.22, max_y - 0.22)
                 local far_from_altar =
                     Shared.Distance(x, y, altar_x, altar_y) > 0.58
                 local far_from_player =

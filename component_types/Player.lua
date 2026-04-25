@@ -100,6 +100,7 @@ Player = {
         self:UpdateShieldVisual(false)
         self:ApplySpriteTint(false)
         self:RenderLocomotionSprite(0.0, 0.0)
+        self:UpdateCamera()
     end,
 
     OnUpdate = function(self)
@@ -116,6 +117,7 @@ Player = {
 
         if not self.alive then
             self:UpdateDeath()
+            self:UpdateCamera()
             self:UpdateHealthUI()
             self:UpdateShieldVisual(false)
             return
@@ -175,6 +177,7 @@ Player = {
         end
 
         self:ApplySpriteTint(shield_active)
+        self:UpdateCamera()
         self:UpdateHealthUI()
         self:UpdateShieldVisual(shield_active)
     end,
@@ -476,10 +479,20 @@ Player = {
 
     UpdateHealthUI = function(self)
         -- Keep player health anchored to the screen's top-left corner.
-        local ui_x, ui_y = Shared.ScreenToWorld(104, 42)
+        local ui_x, ui_y = Shared.ScreenToWorld(118, 96)
         Shared.UpdateHealthVisuals(self.health_visuals, ui_x, ui_y,
                                              self.health, self.max_health, 0.98,
                                              3200)
+    end,
+
+    UpdateCamera = function(self)
+        if self.transform == nil or self.is_victory_display then
+            return
+        end
+        -- The camera follows the player, then clamps so it never reveals past
+        -- the authored combat map.
+        Shared.ClampCameraToStage(self.transform.x, self.transform.y,
+                                  Scene.GetCurrent())
     end,
 
     UpdateShieldVisual = function(self, shield_active)

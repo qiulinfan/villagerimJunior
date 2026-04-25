@@ -23,27 +23,31 @@ Shared.stages = {
         music = {"main", "Village Under Siege"},
         reward = "bow",
         next_scene = "goblin_raid",
-        -- Keep decoration density below the noisy early prototype value.
-        decoration_count = 44,
+        -- 1.5x larger combat map; decoration count scales up, but not by full area.
+        min_x = -4.68,
+        max_x = 4.68,
+        min_y = -2.58,
+        max_y = 2.58,
+        decoration_count = 72,
         altar_x = 0.0,
         altar_y = 0.02,
         player_x = 0.0,
-        player_y = 0.88,
+        player_y = 1.54,
         waves = {
             {frame = 30, spawns = {
-                {kind = "slime", x = -2.85, y = -1.20},
-                {kind = "slime", x = 2.86, y = 1.12}
+                {kind = "slime", x = -4.32, y = -2.02},
+                {kind = "slime", x = 4.34, y = 1.92}
             }},
             {frame = 220, spawns = {
-                {kind = "slime", x = -2.92, y = 0.05},
-                {kind = "slime", x = 2.94, y = -0.92},
-                {kind = "slime", x = 2.82, y = 0.86}
+                {kind = "slime", x = -4.40, y = 0.08},
+                {kind = "slime", x = 4.38, y = -1.82},
+                {kind = "slime", x = 4.18, y = 1.48}
             }},
             {frame = 430, spawns = {
-                {kind = "slime", x = -2.86, y = 1.15},
-                {kind = "slime", x = -2.76, y = -1.06},
-                {kind = "slime", x = 2.93, y = 0.04},
-                {kind = "slime", x = 2.92, y = -1.26}
+                {kind = "slime", x = -4.24, y = 2.08},
+                {kind = "slime", x = -4.20, y = -1.94},
+                {kind = "slime", x = 4.36, y = 0.04},
+                {kind = "slime", x = 4.30, y = -2.18}
             }}
         }
     },
@@ -55,26 +59,30 @@ Shared.stages = {
         reward = "shield",
         next_scene = "champion_duel",
         -- Goblin stages can be busier, but still leave combat space readable.
-        decoration_count = 49,
+        min_x = -4.68,
+        max_x = 4.68,
+        min_y = -2.58,
+        max_y = 2.58,
+        decoration_count = 80,
         altar_x = 0.18,
         altar_y = -0.05,
         player_x = -0.55,
-        player_y = 0.86,
+        player_y = 1.48,
         waves = {
             {frame = 30, spawns = {
-                {kind = "spear", x = -2.90, y = -1.12},
-                {kind = "spear", x = 2.78, y = 0.78}
+                {kind = "spear", x = -4.34, y = -2.00},
+                {kind = "spear", x = 4.22, y = 1.36}
             }},
             {frame = 220, spawns = {
-                {kind = "spear", x = -2.92, y = 0.24},
-                {kind = "spear", x = 2.92, y = -1.05},
-                {kind = "spear", x = 2.82, y = 1.12}
+                {kind = "spear", x = -4.42, y = 0.42},
+                {kind = "spear", x = 4.40, y = -1.88},
+                {kind = "spear", x = 4.18, y = 2.04}
             }},
             {frame = 430, spawns = {
-                {kind = "spear", x = -2.88, y = -1.20},
-                {kind = "spear", x = -2.78, y = 1.04},
-                {kind = "spear", x = 2.94, y = 0.06},
-                {kind = "spear", x = 2.74, y = -1.18}
+                {kind = "spear", x = -4.30, y = -2.10},
+                {kind = "spear", x = -4.10, y = 1.86},
+                {kind = "spear", x = 4.36, y = 0.08},
+                {kind = "spear", x = 4.16, y = -2.08}
             }}
         }
     },
@@ -85,20 +93,24 @@ Shared.stages = {
         music = {"GoblinSwordSaint"},
         next_scene = "victory",
         -- Boss arenas should stay readable so projectile parries are fair.
-        decoration_count = 36,
+        min_x = -4.68,
+        max_x = 4.68,
+        min_y = -2.58,
+        max_y = 2.58,
+        decoration_count = 56,
         altar_x = 0.0,
         altar_y = 0.02,
         player_x = 0.0,
-        player_y = 0.98,
+        player_y = 1.76,
         waves = {
             {frame = 45, spawns = {
-                {kind = "champion", x = 0.0, y = -1.10}
+                {kind = "champion", x = 0.0, y = -1.96}
             }}
         }
     },
     victory = {
         title = "The Village Breathes Again",
-        objective = "Chapter 3 will open later. For now, the rim holds.",
+        objective = "For now, the rim holds.",
         music = {"victory"},
         black_screen = true,
         show_player = true,
@@ -150,7 +162,8 @@ Shared.enemy_defs = {
         speed = 0.020,
         scale = 1.65,
         attack_range = 0.48,
-        attack_cooldown = 42,
+        -- Roughly 1.2x faster than the first boss draft.
+        attack_cooldown = 35,
         hit_radius = 0.30,
         target = "player",
         walk_columns = 6,
@@ -162,11 +175,11 @@ Shared.enemy_defs = {
         special_damage = 2,
         special_speed = 0.046,
         special_min_range = 0.62,
-        special_attack_timer = 24,
-        special_initial_cooldown_min = 65,
-        special_initial_cooldown_max = 105,
-        special_cooldown_min = 85,
-        special_cooldown_max = 145
+        special_attack_timer = 20,
+        special_initial_cooldown_min = 54,
+        special_initial_cooldown_max = 88,
+        special_cooldown_min = 70,
+        special_cooldown_max = 120
     }
 }
 
@@ -223,7 +236,41 @@ function Shared.GetWindowSize()
 end
 
 function Shared.GetStageBounds(scene_name)
-    return -3.12, 3.12, -1.72, 1.72
+    local stage = Shared.stages[scene_name or Scene.GetCurrent()]
+    if stage == nil then
+        return -3.12, 3.12, -1.72, 1.72
+    end
+    return stage.min_x or -3.12, stage.max_x or 3.12,
+           stage.min_y or -1.72, stage.max_y or 1.72
+end
+
+function Shared.GetViewportHalfExtents()
+    local zoom = math.max(0.01, Camera.GetZoom())
+    local window_width, window_height = Shared.GetWindowSize()
+    return window_width / (200.0 * zoom), window_height / (200.0 * zoom)
+end
+
+function Shared.ClampCameraToStage(x, y, scene_name)
+    local min_x, max_x, min_y, max_y = Shared.GetStageBounds(scene_name)
+    local half_width, half_height = Shared.GetViewportHalfExtents()
+    local camera_x = x
+    local camera_y = y
+
+    if (max_x - min_x) <= half_width * 2.0 then
+        camera_x = (min_x + max_x) * 0.5
+    else
+        camera_x = Shared.Clamp(camera_x, min_x + half_width,
+                                max_x - half_width)
+    end
+
+    if (max_y - min_y) <= half_height * 2.0 then
+        camera_y = (min_y + max_y) * 0.5
+    else
+        camera_y = Shared.Clamp(camera_y, min_y + half_height,
+                                max_y - half_height)
+    end
+
+    Camera.SetPosition(camera_x, camera_y)
 end
 
 function Shared.WorldToScreen(x, y)
