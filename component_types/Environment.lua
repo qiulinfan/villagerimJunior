@@ -1,16 +1,16 @@
-VillageRimEnvironment = {
+Environment = {
     OnStart = function(self)
-        VillageRimShared.SeedRandomOnce()
+        Shared.SeedRandomOnce()
         self.decorations = {}
 
-        local director = VillageRimShared.GetDirector()
+        local director = Shared.GetDirector()
         self.stage = nil
         if director ~= nil then
             self.stage = director:GetStage()
         end
         if self.stage == nil then
-            self.stage = VillageRimShared.stages[Scene.GetCurrent()] or
-                             VillageRimShared.stages.main
+            self.stage = Shared.stages[Scene.GetCurrent()] or
+                             Shared.stages.main
         end
 
         self:SpawnCrops()
@@ -21,7 +21,7 @@ VillageRimEnvironment = {
             return
         end
         for index = 1, #self.decorations do
-            VillageRimShared.DestroyVisual(self.decorations[index])
+            Shared.DestroyVisual(self.decorations[index])
         end
     end,
 
@@ -36,23 +36,23 @@ VillageRimEnvironment = {
             local x = 0.0
             local y = 0.0
             for attempt = 1, 12 do
-                x = VillageRimShared.RandomRange(-3.0, 3.0)
-                y = VillageRimShared.RandomRange(-1.55, 1.55)
+                x = Shared.RandomRange(-3.0, 3.0)
+                y = Shared.RandomRange(-1.55, 1.55)
                 local far_from_altar =
-                    VillageRimShared.Distance(x, y, altar_x, altar_y) > 0.58
+                    Shared.Distance(x, y, altar_x, altar_y) > 0.58
                 local far_from_player =
-                    VillageRimShared.Distance(x, y, player_x, player_y) > 0.44
+                    Shared.Distance(x, y, player_x, player_y) > 0.44
                 if far_from_altar and far_from_player then
                     break
                 end
             end
 
-            local cell = VillageRimShared.crop_cells[
-                             math.random(1, #VillageRimShared.crop_cells)]
-            local visual = VillageRimShared.SpawnVisual()
-            VillageRimShared.SetVisual(
+            local cell = Shared.crop_cells[
+                             math.random(1, #Shared.crop_cells)]
+            local visual = Shared.SpawnVisual()
+            Shared.SetVisual(
                 visual, "Summer Crops", cell[1], cell[2], x, y, 2.0, 2.0,
-                VillageRimShared.SortOrder(y, -60), 230)
+                Shared.SortOrder(y, -60), 230)
             self.decorations[#self.decorations + 1] = visual
         end
     end

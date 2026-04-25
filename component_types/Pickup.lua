@@ -1,4 +1,4 @@
-VillageRimPickup = {
+Pickup = {
     pickup_kind = "bow",
     bob_frame = 0,
     base_x = 0.0,
@@ -24,9 +24,9 @@ VillageRimPickup = {
         self.transform.y = self.base_y + math.sin(self.bob_frame * 0.08) * 0.06
         self.transform.x = self.base_x
 
-        local player = VillageRimShared.GetPlayer()
+        local player = Shared.GetPlayer()
         if player ~= nil and player:IsAlive() then
-            local distance = VillageRimShared.Distance(
+            local distance = Shared.Distance(
                                  self.transform.x, self.transform.y,
                                  player:GetPositionX(), player:GetPositionY())
             if distance <= 0.42 then
@@ -66,8 +66,8 @@ VillageRimPickup = {
 
     Collect = function(self, player)
         self.collected = true
-        VillageRimShared.PlaySfx(11, {"itemPickUp"}, 94)
-        local state = VillageRimShared.GetRunState()
+        Shared.PlaySfx(11, {"itemPickUp"}, 94)
+        local state = Shared.GetRunState()
         if self.pickup_kind == "shield" then
             state.shield = true
             if player ~= nil then
@@ -81,7 +81,7 @@ VillageRimPickup = {
             end
         end
 
-        local director = VillageRimShared.GetDirector()
+        local director = Shared.GetDirector()
         if director ~= nil then
             director:NotifyPickupCollected(self.pickup_kind)
         end

@@ -14,8 +14,8 @@
       "sorting_order": 0,
       "auto_sorting_order": false
     },
-    "VillageRimAltar": {
-      "type": "VillageRimAltar"
+    "Altar": {
+      "type": "Altar"
     }
   }
 }

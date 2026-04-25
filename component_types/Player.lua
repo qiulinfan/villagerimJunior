@@ -12,7 +12,7 @@ end
 local function GetMouseWorldPosition()
     local mouse_position = Input.GetMousePosition()
     local zoom = math.max(0.01, Camera.GetZoom())
-    local window_width, window_height = VillageRimShared.GetWindowSize()
+    local window_width, window_height = Shared.GetWindowSize()
 
     local world_x = Camera.GetPositionX() +
                         (mouse_position.x - window_width * 0.5) /
@@ -23,7 +23,7 @@ local function GetMouseWorldPosition()
     return world_x, world_y
 end
 
-VillageRimPlayer = {
+Player = {
     max_health = 10,
     health = 10,
     move_speed = 0.035,
@@ -59,7 +59,7 @@ VillageRimPlayer = {
 
         local scene_name = Scene.GetCurrent()
         local min_x, max_x, min_y, max_y =
-            VillageRimShared.GetStageBounds(scene_name)
+            Shared.GetStageBounds(scene_name)
         local padding = math.max(0.12, self.hit_radius)
         self.min_x = min_x + padding
         self.max_x = max_x - padding
@@ -68,9 +68,9 @@ VillageRimPlayer = {
 
         if self.transform ~= nil then
             self.transform.x =
-                VillageRimShared.Clamp(self.transform.x, self.min_x, self.max_x)
+                Shared.Clamp(self.transform.x, self.min_x, self.max_x)
             self.transform.y =
-                VillageRimShared.Clamp(self.transform.y, self.min_y, self.max_y)
+                Shared.Clamp(self.transform.y, self.min_y, self.max_y)
         end
 
         self.health = self.max_health
@@ -84,10 +84,10 @@ VillageRimPlayer = {
         self.pending_shot_y = 0.0
 
         self.health_visuals =
-            VillageRimShared.CreateHealthVisuals(math.ceil(self.max_health / 2))
-        self.shield_visual = VillageRimShared.SpawnVisual()
+            Shared.CreateHealthVisuals(math.ceil(self.max_health / 2))
+        self.shield_visual = Shared.SpawnVisual()
 
-        local state = VillageRimShared.GetRunState()
+        local state = Shared.GetRunState()
         if state.weapon == nil or state.weapon == "" then
             state.weapon = "sword"
         end
@@ -124,7 +124,7 @@ VillageRimPlayer = {
         self:HandleWeaponKeys()
         local move_x, move_y = self:ReadMovement()
         local mouse_world_x, mouse_world_y = GetMouseWorldPosition()
-        local mouse_aim_x, mouse_aim_y = VillageRimShared.Normalize(
+        local mouse_aim_x, mouse_aim_y = Shared.Normalize(
                                            mouse_world_x - self.transform.x,
                                            mouse_world_y - self.transform.y)
         local mouse_face_x, mouse_face_y = CardinalizeDirection(
@@ -170,8 +170,8 @@ VillageRimPlayer = {
     end,
 
     OnDestroy = function(self)
-        VillageRimShared.DestroyHealthVisuals(self.health_visuals)
-        VillageRimShared.DestroyVisual(self.shield_visual)
+        Shared.DestroyHealthVisuals(self.health_visuals)
+        Shared.DestroyVisual(self.shield_visual)
     end,
 
     SetStage = function(self, stage_name)
@@ -179,7 +179,7 @@ VillageRimPlayer = {
     end,
 
     HandleWeaponKeys = function(self)
-        local state = VillageRimShared.GetRunState()
+        local state = Shared.GetRunState()
         if Input.GetKeyDown("1") then
             state.weapon = "sword"
         elseif state.bow and Input.GetKeyDown("2") then
@@ -202,7 +202,7 @@ VillageRimPlayer = {
         if Input.GetKey("down") or Input.GetKey("s") then
             y = y + 1.0
         end
-        local nx, ny = VillageRimShared.Normalize(x, y)
+        local nx, ny = Shared.Normalize(x, y)
         return nx, ny
     end,
 
@@ -219,16 +219,16 @@ VillageRimPlayer = {
             speed = speed * self.shield_move_factor
         end
 
-        self.transform.x = VillageRimShared.Clamp(
+        self.transform.x = Shared.Clamp(
                                self.transform.x + move_x * speed, self.min_x,
                                self.max_x)
-        self.transform.y = VillageRimShared.Clamp(
+        self.transform.y = Shared.Clamp(
                                self.transform.y + move_y * speed, self.min_y,
                                self.max_y)
     end,
 
     BeginAttack = function(self, aim_x, aim_y)
-        local state = VillageRimShared.GetRunState()
+        local state = Shared.GetRunState()
         self.attacked_targets = {}
 
         if state.weapon == "bow" and state.bow then
@@ -241,13 +241,13 @@ VillageRimPlayer = {
             end
             self.attack_kind = "bow"
             self.attack_timer = self.bow_attack_duration
-            VillageRimShared.PlaySfx(13, {"arrow-swish"}, 82)
+            Shared.PlaySfx(13, {"arrow-swish"}, 82)
             return
         end
 
         self.attack_kind = "sword"
         self.attack_timer = self.sword_attack_duration
-        VillageRimShared.PlaySfx(12, {"playSwingSword_clean", "playSwingSword"},
+        Shared.PlaySfx(12, {"playSwingSword_clean", "playSwingSword"},
                                  84)
     end,
 
@@ -284,15 +284,16 @@ VillageRimPlayer = {
             local enemy_actor = enemies[index]
             local enemy_uid = enemy_actor:GetUID()
             if self.attacked_targets[enemy_uid] == nil then
-                local enemy = enemy_actor:GetComponent("VillageRimEnemy")
+                local enemy = enemy_actor:GetComponent("Enemy")
                 if enemy ~= nil and enemy:IsAlive() then
                     local dx = enemy:GetPositionX() - self.transform.x
                     local dy = enemy:GetPositionY() - self.transform.y
-                    local _, _, distance = VillageRimShared.Normalize(dx, dy)
+                    local _, _, distance = Shared.Normalize(dx, dy)
                     local dot = dx * self.facing_x + dy * self.facing_y
                     if distance <= self.sword_range and dot > -0.06 then
-                        enemy:TakeDamage(self.sword_damage, self.facing_x * 0.09,
-                                         self.facing_y * 0.09)
+                        -- Use facing direction as knockback so sword hits buy space.
+                        enemy:TakeDamage(self.sword_damage, self.facing_x * 0.16,
+                                         self.facing_y * 0.16)
                         self.attacked_targets[enemy_uid] = true
                     end
                 end
@@ -315,7 +316,7 @@ VillageRimPlayer = {
 
         local x = self.transform.x + shot_x * 0.28
         local y = self.transform.y + shot_y * 0.28
-        local projectile = actor:GetComponent("VillageRimProjectile")
+        local projectile = actor:GetComponent("Projectile")
         if projectile ~= nil then
             projectile:Launch(x, y, shot_x, shot_y, self.bow_damage,
                               self.bow_projectile_speed)
@@ -323,7 +324,7 @@ VillageRimPlayer = {
     end,
 
     IsShieldActive = function(self)
-        local state = VillageRimShared.GetRunState()
+        local state = Shared.GetRunState()
         if not state.shield or not self.alive or self.attack_timer > 0 then
             return false
         end
@@ -338,19 +339,19 @@ VillageRimPlayer = {
 
         if self:IsShieldActive() then
             self.invulnerable_timer = 14
-            VillageRimShared.PlaySfx(14, {"shieldblock"}, 88)
+            Shared.PlaySfx(14, {"shieldblock"}, 88)
             return
         end
 
         self.health = math.max(0, self.health - (amount or 1))
         self.invulnerable_timer = self.invulnerable_frames
-        VillageRimShared.PlaySfx(15, {"playerDamaged"}, 82)
+        Shared.PlaySfx(15, {"playerDamaged"}, 82)
 
         if self.transform ~= nil then
-            self.transform.x = VillageRimShared.Clamp(
+            self.transform.x = Shared.Clamp(
                                    self.transform.x + (source_x or 0.0) * 0.08,
                                    self.min_x, self.max_x)
-            self.transform.y = VillageRimShared.Clamp(
+            self.transform.y = Shared.Clamp(
                                    self.transform.y + (source_y or 0.0) * 0.08,
                                    self.min_y, self.max_y)
         end
@@ -359,7 +360,7 @@ VillageRimPlayer = {
         if self.health <= 0 then
             self.alive = false
             self.death_timer = self.death_frames
-            local director = VillageRimShared.GetDirector()
+            local director = Shared.GetDirector()
             if director ~= nil then
                 director:NotifyPlayerDefeated()
             end
@@ -367,18 +368,18 @@ VillageRimPlayer = {
     end,
 
     GrantBow = function(self)
-        local state = VillageRimShared.GetRunState()
+        local state = Shared.GetRunState()
         state.bow = true
         state.weapon = "bow"
     end,
 
     GrantShield = function(self)
-        local state = VillageRimShared.GetRunState()
+        local state = Shared.GetRunState()
         state.shield = true
     end,
 
     RenderAttackSprite = function(self, image, columns, elapsed, duration)
-        local row, flip = VillageRimShared.StandardDirectionRow(self.facing_x,
+        local row, flip = Shared.StandardDirectionRow(self.facing_x,
                                                                 self.facing_y)
         local column = math.min(columns,
                                 1 + math.floor(elapsed * columns / duration))
@@ -387,25 +388,25 @@ VillageRimPlayer = {
         self.sprite.scale_x = self.sprite_scale * flip
         self.sprite.scale_y = self.sprite_scale
         self.sprite.sorting_order =
-            VillageRimShared.SortOrder(self.transform.y, 80)
+            Shared.SortOrder(self.transform.y, 80)
         self.sprite.auto_sorting_order = false
     end,
 
     RenderLocomotionSprite = function(self, move_x, move_y)
-        local row, flip = VillageRimShared.StandardDirectionRow(self.facing_x,
+        local row, flip = Shared.StandardDirectionRow(self.facing_x,
                                                                 self.facing_y)
         if math.abs(move_x) > 0.0 or math.abs(move_y) > 0.0 then
             self.sprite.sprite = "Player/Run"
-            self.sprite:SetSpriteCell(row, VillageRimShared.AnimationFrame(8, 5))
+            self.sprite:SetSpriteCell(row, Shared.AnimationFrame(8, 5))
         else
             self.sprite.sprite = "Player/Idle"
             self.sprite:SetSpriteCell(row,
-                                      VillageRimShared.AnimationFrame(4, 10))
+                                      Shared.AnimationFrame(4, 10))
         end
         self.sprite.scale_x = self.sprite_scale * flip
         self.sprite.scale_y = self.sprite_scale
         self.sprite.sorting_order =
-            VillageRimShared.SortOrder(self.transform.y, 80)
+            Shared.SortOrder(self.transform.y, 80)
         self.sprite.auto_sorting_order = false
     end,
 
@@ -441,8 +442,8 @@ VillageRimPlayer = {
     end,
 
     UpdateHealthUI = function(self)
-        VillageRimShared.UpdateHealthVisuals(self.health_visuals, -2.70, -1.54,
-                                             self.health, self.max_health, 0.82,
+        Shared.UpdateHealthVisuals(self.health_visuals, -2.70, -1.54,
+                                             self.health, self.max_health, 0.98,
                                              3200)
     end,
 
@@ -454,9 +455,9 @@ VillageRimPlayer = {
         local alpha = shield_active and 230 or 0
         local x = self.transform.x + self.facing_x * 0.25
         local y = self.transform.y + self.facing_y * 0.25
-        VillageRimShared.SetVisual(self.shield_visual, "shield", 1, 1, x, y,
+        Shared.SetVisual(self.shield_visual, "shield", 1, 1, x, y,
                                    1.15, 1.15,
-                                   VillageRimShared.SortOrder(y, 120), alpha)
+                                   Shared.SortOrder(y, 120), alpha)
     end,
 
     IsAlive = function(self)

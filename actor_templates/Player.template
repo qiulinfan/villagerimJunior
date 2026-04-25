@@ -1,21 +1,21 @@
 {
-  "name": "pickup",
+  "name": "player",
   "components": {
     "Transform": {
       "type": "Transform"
     },
     "SpriteRenderer": {
       "type": "SpriteRenderer",
-      "sprite": "bow",
+      "sprite": "Player/Idle",
       "pivot_x": 0.5,
       "pivot_y": 0.5,
-      "scale_x": 0.85,
-      "scale_y": 0.85,
-      "sorting_order": 2400,
+      "scale_x": 1.72,
+      "scale_y": 1.72,
+      "sorting_order": 0,
       "auto_sorting_order": false
     },
-    "VillageRimPickup": {
-      "type": "VillageRimPickup"
+    "Player": {
+      "type": "Player"
     }
   }
 }

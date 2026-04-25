@@ -1,6 +1,6 @@
-VillageRimHUD = {
+HUD = {
     OnUpdate = function(self)
-        local director = VillageRimShared.GetDirector()
+        local director = Shared.GetDirector()
         if director == nil then
             Text.Draw("VillageRimJr", 18, 16, "NotoSans-Regular", 24, 22, 28,
                       20, 255)
@@ -19,7 +19,7 @@ VillageRimHUD = {
         Text.Draw(objective, 18, 42, "NotoSans-Regular", 15, 28, 38, 24, 255)
 
         local controls = "WASD move | Space/LMB attack | 1 sword"
-        local state = VillageRimShared.GetRunState()
+        local state = Shared.GetRunState()
         if state.bow then
             controls = controls .. " | 2 bow"
         end

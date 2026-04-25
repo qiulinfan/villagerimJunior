@@ -1,4 +1,4 @@
-VillageRimAltar = {
+Altar = {
     max_health = 12,
     health = 12,
     stage_name = "",
@@ -10,7 +10,7 @@ VillageRimAltar = {
         self.health = self.max_health
         self.alive = true
         self.health_visuals =
-            VillageRimShared.CreateHealthVisuals(math.ceil(self.max_health / 2))
+            Shared.CreateHealthVisuals(math.ceil(self.max_health / 2))
         self:RefreshSprite()
     end,
 
@@ -18,14 +18,14 @@ VillageRimAltar = {
         if self.transform == nil then
             return
         end
-        VillageRimShared.UpdateHealthVisuals(
+        Shared.UpdateHealthVisuals(
             self.health_visuals, self.transform.x, self.transform.y - 0.58,
-            self.health, self.max_health, 0.75,
-            VillageRimShared.SortOrder(self.transform.y, 420))
+            self.health, self.max_health, 0.88,
+            Shared.SortOrder(self.transform.y, 420))
     end,
 
     OnDestroy = function(self)
-        VillageRimShared.DestroyHealthVisuals(self.health_visuals)
+        Shared.DestroyHealthVisuals(self.health_visuals)
     end,
 
     SetStage = function(self, stage_name)
@@ -44,7 +44,7 @@ VillageRimAltar = {
         self.sprite.scale_x = 0.8
         self.sprite.scale_y = 0.8
         self.sprite.sorting_order =
-            VillageRimShared.SortOrder(self.transform and self.transform.y or 0.0, 20)
+            Shared.SortOrder(self.transform and self.transform.y or 0.0, 20)
         self.sprite.auto_sorting_order = false
     end,
 
@@ -56,7 +56,7 @@ VillageRimAltar = {
         if self.health <= 0 then
             self.alive = false
             self:RefreshSprite()
-            local director = VillageRimShared.GetDirector()
+            local director = Shared.GetDirector()
             if director ~= nil then
                 director:NotifyAltarDestroyed()
             end

@@ -1,6 +1,8 @@
-VillageRimShared = VillageRimShared or {}
+Shared = Shared or {}
 
-VillageRimShared.crop_cells = {
+-- Runtime decoration pool. Environment.lua samples from this list each time a
+-- scene starts, so stages feel alive without hand-placing every crop actor.
+Shared.crop_cells = {
     {2, 1}, {2, 2}, {2, 3},
     {4, 1}, {4, 2}, {4, 3}, {4, 4},
     {6, 3}, {6, 4},
@@ -13,14 +15,15 @@ VillageRimShared.crop_cells = {
     {26, 3}
 }
 
-VillageRimShared.stages = {
+Shared.stages = {
     main = {
         title = "Stage 1: Slime Garden",
         objective = "Protect the altar. Clear the slime wave, then pick up the bow.",
         music = {"main", "Village Under Siege"},
         reward = "bow",
         next_scene = "goblin_raid",
-        decoration_count = 66,
+        -- Keep decoration density below the noisy early prototype value.
+        decoration_count = 44,
         altar_x = 0.0,
         altar_y = 0.02,
         player_x = 0.0,
@@ -49,7 +52,8 @@ VillageRimShared.stages = {
         music = {"invasion", "Village Under Siege"},
         reward = "shield",
         next_scene = "victory",
-        decoration_count = 74,
+        -- Goblin stages can be busier, but still leave combat space readable.
+        decoration_count = 49,
         altar_x = 0.18,
         altar_y = -0.05,
         player_x = -0.55,
@@ -76,14 +80,15 @@ VillageRimShared.stages = {
         title = "The Village Breathes Again",
         objective = "Chapter 3 will open later. For now, the rim holds.",
         music = {"victory"},
-        decoration_count = 86,
+        -- Victory is calmer gameplay-wise, so it can carry a little more set dressing.
+        decoration_count = 57,
         altar_x = 0.0,
         altar_y = 0.08,
         victory = true
     }
 }
 
-VillageRimShared.enemy_defs = {
+Shared.enemy_defs = {
     slime = {
         walk = "Enemies/Slime/Walk",
         idle = "Enemies/Slime/Idle",
@@ -116,26 +121,26 @@ VillageRimShared.enemy_defs = {
     }
 }
 
-function VillageRimShared.GetRunState()
-    VillageRimJrState = VillageRimJrState or {
+function Shared.GetRunState()
+    RunState = RunState or {
         bow = false,
         shield = false,
         weapon = "sword",
         current_music = ""
     }
-    return VillageRimJrState
+    return RunState
 end
 
-function VillageRimShared.ResetRunState()
-    local state = VillageRimShared.GetRunState()
+function Shared.ResetRunState()
+    local state = Shared.GetRunState()
     state.bow = false
     state.shield = false
     state.weapon = "sword"
     state.current_music = ""
 end
 
-function VillageRimShared.SeedRandomOnce()
-    if VillageRimJrRandomSeeded then
+function Shared.SeedRandomOnce()
+    if RandomSeeded then
         return
     end
     local seed = 1337
@@ -143,10 +148,10 @@ function VillageRimShared.SeedRandomOnce()
         seed = os.time() % 2147483647
     end
     math.randomseed(seed)
-    VillageRimJrRandomSeeded = true
+    RandomSeeded = true
 end
 
-function VillageRimShared.Clamp(value, minimum, maximum)
+function Shared.Clamp(value, minimum, maximum)
     if value < minimum then
         return minimum
     end
@@ -156,7 +161,7 @@ function VillageRimShared.Clamp(value, minimum, maximum)
     return value
 end
 
-function VillageRimShared.GetWindowSize()
+function Shared.GetWindowSize()
     local window_width = 640
     local window_height = 360
     if Application ~= nil and Application.GetWindowWidth ~= nil then
@@ -168,22 +173,22 @@ function VillageRimShared.GetWindowSize()
     return window_width, window_height
 end
 
-function VillageRimShared.GetStageBounds(scene_name)
+function Shared.GetStageBounds(scene_name)
     return -3.12, 3.12, -1.72, 1.72
 end
 
-function VillageRimShared.AnimationFrame(frame_count, frame_stride)
+function Shared.AnimationFrame(frame_count, frame_stride)
     return 1 + (math.floor(Application.GetFrame() / frame_stride) %
                    frame_count)
 end
 
-function VillageRimShared.Distance(ax, ay, bx, by)
+function Shared.Distance(ax, ay, bx, by)
     local dx = bx - ax
     local dy = by - ay
     return math.sqrt(dx * dx + dy * dy)
 end
 
-function VillageRimShared.Normalize(x, y)
+function Shared.Normalize(x, y)
     local length = math.sqrt(x * x + y * y)
     if length <= 0.00001 then
         return 0.0, 0.0, 0.0
@@ -191,15 +196,15 @@ function VillageRimShared.Normalize(x, y)
     return x / length, y / length, length
 end
 
-function VillageRimShared.RandomRange(minimum, maximum)
+function Shared.RandomRange(minimum, maximum)
     return minimum + math.random() * (maximum - minimum)
 end
 
-function VillageRimShared.SortOrder(y, offset)
+function Shared.SortOrder(y, offset)
     return 500 + math.floor((y or 0.0) * 100.0) + (offset or 0)
 end
 
-function VillageRimShared.ResolveClip(candidates)
+function Shared.ResolveClip(candidates)
     if candidates == nil then
         return ""
     end
@@ -212,9 +217,9 @@ function VillageRimShared.ResolveClip(candidates)
     return ""
 end
 
-function VillageRimShared.PlayMusicOnce(candidates)
-    local clip = VillageRimShared.ResolveClip(candidates)
-    local state = VillageRimShared.GetRunState()
+function Shared.PlayMusicOnce(candidates)
+    local clip = Shared.ResolveClip(candidates)
+    local state = Shared.GetRunState()
     if clip == "" then
         Music.Halt()
         state.current_music = ""
@@ -228,8 +233,8 @@ function VillageRimShared.PlayMusicOnce(candidates)
     state.current_music = clip
 end
 
-function VillageRimShared.PlaySfx(channel, candidates, volume)
-    local clip = VillageRimShared.ResolveClip(candidates)
+function Shared.PlaySfx(channel, candidates, volume)
+    local clip = Shared.ResolveClip(candidates)
     if clip == "" then
         return
     end
@@ -237,7 +242,7 @@ function VillageRimShared.PlaySfx(channel, candidates, volume)
     Audio.Play(channel, clip, false)
 end
 
-function VillageRimShared.StandardDirectionRow(dx, dy)
+function Shared.StandardDirectionRow(dx, dy)
     if math.abs(dx) > math.abs(dy) then
         if dx < 0.0 then
             return 3, -1.0
@@ -250,7 +255,7 @@ function VillageRimShared.StandardDirectionRow(dx, dy)
     return 1, 1.0
 end
 
-function VillageRimShared.SlimeDirectionRow(dx, dy)
+function Shared.SlimeDirectionRow(dx, dy)
     if math.abs(dx) > math.abs(dy) then
         if dx < 0.0 then
             return 1, -1.0
@@ -263,14 +268,14 @@ function VillageRimShared.SlimeDirectionRow(dx, dy)
     return 2, 1.0
 end
 
-function VillageRimShared.DirectionRow(kind, dx, dy)
+function Shared.DirectionRow(kind, dx, dy)
     if kind == "slime" then
-        return VillageRimShared.SlimeDirectionRow(dx, dy)
+        return Shared.SlimeDirectionRow(dx, dy)
     end
-    return VillageRimShared.StandardDirectionRow(dx, dy)
+    return Shared.StandardDirectionRow(dx, dy)
 end
 
-function VillageRimShared.HeartColumn(health_units, slot_index)
+function Shared.HeartColumn(health_units, slot_index)
     local remaining = health_units - ((slot_index - 1) * 2)
     if remaining >= 2 then
         return 1
@@ -281,7 +286,7 @@ function VillageRimShared.HeartColumn(health_units, slot_index)
     return 3
 end
 
-function VillageRimShared.SpawnVisual()
+function Shared.SpawnVisual()
     local actor = Actor.Instantiate("VisualActor")
     if actor == nil then
         return nil
@@ -298,13 +303,13 @@ function VillageRimShared.SpawnVisual()
     }
 end
 
-function VillageRimShared.DestroyVisual(visual)
+function Shared.DestroyVisual(visual)
     if visual ~= nil and visual.actor ~= nil then
         Actor.Destroy(visual.actor)
     end
 end
 
-function VillageRimShared.SetVisual(visual, image, row, column, x, y,
+function Shared.SetVisual(visual, image, row, column, x, y,
                                     scale_x, scale_y, order, alpha)
     if visual == nil then
         return
@@ -323,72 +328,77 @@ function VillageRimShared.SetVisual(visual, image, row, column, x, y,
     visual.sprite.a = alpha or 255
 end
 
-function VillageRimShared.CreateHealthVisuals(slot_count)
+function Shared.CreateHealthVisuals(slot_count)
     local visuals = {
-        background = VillageRimShared.SpawnVisual(),
+        background = Shared.SpawnVisual(),
         hearts = {}
     }
     for index = 1, slot_count do
-        visuals.hearts[index] = VillageRimShared.SpawnVisual()
+        visuals.hearts[index] = Shared.SpawnVisual()
     end
     return visuals
 end
 
-function VillageRimShared.DestroyHealthVisuals(visuals)
+function Shared.DestroyHealthVisuals(visuals)
     if visuals == nil then
         return
     end
-    VillageRimShared.DestroyVisual(visuals.background)
+    Shared.DestroyVisual(visuals.background)
     for index = 1, #visuals.hearts do
-        VillageRimShared.DestroyVisual(visuals.hearts[index])
+        Shared.DestroyVisual(visuals.hearts[index])
     end
 end
 
-function VillageRimShared.UpdateHealthVisuals(visuals, x, y, health_units,
+function Shared.UpdateHealthVisuals(visuals, x, y, health_units,
                                               max_health_units, scale, order)
     if visuals == nil then
         return
     end
     local slots = math.max(1, math.ceil(max_health_units / 2))
-    local spacing = 0.18 * (scale or 1.0)
+    local visual_scale = scale or 1.0
+    local spacing = 0.27 * visual_scale
     local start_x = x - ((slots - 1) * spacing) * 0.5
-    VillageRimShared.SetVisual(visuals.background, "UI/0.2.png", 2, 5,
-                               x, y, 0.66 * (scale or 1.0),
-                               0.42 * (scale or 1.0), order or 1500, 230)
+    -- The border sprite is one frame, so stretch it to the active heart count.
+    local background_width =
+        math.max(1.05 * visual_scale,
+                 ((slots - 1) * spacing) + (0.52 * visual_scale))
+    Shared.SetVisual(visuals.background, "UI/0.2.png", 2, 5,
+                               x, y, background_width,
+                               0.64 * visual_scale, order or 1500, 235)
     for index = 1, #visuals.hearts do
         local alpha = 255
         if index > slots then
             alpha = 0
         end
-        VillageRimShared.SetVisual(
+        Shared.SetVisual(
             visuals.hearts[index], "UI/Bars", 1,
-            VillageRimShared.HeartColumn(health_units, index),
+            Shared.HeartColumn(health_units, index),
             start_x + (index - 1) * spacing, y,
-            0.74 * (scale or 1.0), 0.74 * (scale or 1.0),
+            0.98 * visual_scale, 0.98 * visual_scale,
             (order or 1500) + index, alpha)
     end
 end
 
-function VillageRimShared.GetDirector()
+function Shared.GetDirector()
     local actor = Actor.Find("director")
     if actor == nil then
         return nil
     end
-    return actor:GetComponent("VillageRimDirector")
+    return actor:GetComponent("Director")
 end
 
-function VillageRimShared.GetPlayer()
+function Shared.GetPlayer()
     local actor = Actor.Find("player")
     if actor == nil then
         return nil
     end
-    return actor:GetComponent("VillageRimPlayer")
+    return actor:GetComponent("Player")
 end
 
-function VillageRimShared.GetAltar()
+function Shared.GetAltar()
     local actor = Actor.Find("altar")
     if actor == nil then
         return nil
     end
-    return actor:GetComponent("VillageRimAltar")
+    return actor:GetComponent("Altar")
 end

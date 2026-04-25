@@ -1,4 +1,4 @@
-VillageRimDirector = {
+Director = {
     stage_name = "",
     frame = 0,
     spawn_index = 1,
@@ -11,13 +11,13 @@ VillageRimDirector = {
     message = "",
 
     OnStart = function(self)
-        VillageRimShared.SeedRandomOnce()
+        Shared.SeedRandomOnce()
 
         if self.stage_name == nil or self.stage_name == "" then
             self.stage_name = Scene.GetCurrent()
         end
-        self.stage = VillageRimShared.stages[self.stage_name] or
-                         VillageRimShared.stages.main
+        self.stage = Shared.stages[self.stage_name] or
+                         Shared.stages.main
 
         self.frame = 0
         self.spawn_index = 1
@@ -30,10 +30,10 @@ VillageRimDirector = {
         self.message = self.stage.objective or ""
 
         if self.stage_name == "main" then
-            VillageRimShared.ResetRunState()
+            Shared.ResetRunState()
         end
 
-        local run_state = VillageRimShared.GetRunState()
+        local run_state = Shared.GetRunState()
         if self.stage_name == "goblin_raid" then
             run_state.bow = true
             run_state.weapon = "bow"
@@ -44,7 +44,7 @@ VillageRimDirector = {
 
         Camera.SetPosition(0.0, 0.0)
         Camera.SetZoom(1.0)
-        VillageRimShared.PlayMusicOnce(self.stage.music)
+        Shared.PlayMusicOnce(self.stage.music)
 
         self:SpawnCoreActors()
         if self.stage.victory then
@@ -94,28 +94,28 @@ VillageRimDirector = {
     end,
 
     SpawnCoreActors = function(self)
-        local altar = Actor.Instantiate("VillageRimAltar")
+        local altar = Actor.Instantiate("Altar")
         if altar ~= nil then
             local transform = altar:GetComponent("Transform")
             if transform ~= nil then
                 transform.x = self.stage.altar_x or 0.0
                 transform.y = self.stage.altar_y or 0.0
             end
-            local altar_component = altar:GetComponent("VillageRimAltar")
+            local altar_component = altar:GetComponent("Altar")
             if altar_component ~= nil then
                 altar_component:SetStage(self.stage_name)
             end
         end
 
         if not self.stage.victory then
-            local player = Actor.Instantiate("VillageRimPlayer")
+            local player = Actor.Instantiate("Player")
             if player ~= nil then
                 local transform = player:GetComponent("Transform")
                 if transform ~= nil then
                     transform.x = self.stage.player_x or 0.0
                     transform.y = self.stage.player_y or 0.9
                 end
-                local player_component = player:GetComponent("VillageRimPlayer")
+                local player_component = player:GetComponent("Player")
                 if player_component ~= nil then
                     player_component:SetStage(self.stage_name)
                 end
@@ -161,7 +161,7 @@ VillageRimDirector = {
             transform.y = y or 0.0
         end
 
-        local enemy = actor:GetComponent("VillageRimEnemy")
+        local enemy = actor:GetComponent("Enemy")
         if enemy ~= nil then
             enemy:SetKind(kind or "slime")
         end
@@ -173,7 +173,7 @@ VillageRimDirector = {
         end
 
         self.reward_spawned = true
-        local actor = Actor.Instantiate("VillageRimPickup")
+        local actor = Actor.Instantiate("Pickup")
         if actor == nil then
             return
         end
@@ -186,7 +186,7 @@ VillageRimDirector = {
             transform.y = y
         end
 
-        local pickup = actor:GetComponent("VillageRimPickup")
+        local pickup = actor:GetComponent("Pickup")
         if pickup ~= nil then
             pickup:SetKind(self.stage.reward)
             pickup:Place(x, y)
@@ -202,7 +202,7 @@ VillageRimDirector = {
         local actors = Actor.FindAll("enemy")
         local count = 0
         for index = 1, #actors do
-            local enemy = actors[index]:GetComponent("VillageRimEnemy")
+            local enemy = actors[index]:GetComponent("Enemy")
             if enemy ~= nil and enemy:IsAlive() then
                 count = count + 1
             end

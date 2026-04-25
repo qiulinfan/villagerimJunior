@@ -1,4 +1,4 @@
-VillageRimProjectile = {
+Projectile = {
     vx = 1.0,
     vy = 0.0,
     speed = 0.06,
@@ -32,14 +32,15 @@ VillageRimProjectile = {
 
         local enemies = Actor.FindAll("enemy")
         for index = 1, #enemies do
-            local enemy = enemies[index]:GetComponent("VillageRimEnemy")
+            local enemy = enemies[index]:GetComponent("Enemy")
             if enemy ~= nil and enemy:IsAlive() then
-                local distance = VillageRimShared.Distance(
+                local distance = Shared.Distance(
                                      self.transform.x, self.transform.y,
                                      enemy:GetPositionX(), enemy:GetPositionY())
                 if distance <= self.radius + enemy:GetHitRadius() then
-                    enemy:TakeDamage(self.damage, self.vx * 0.10,
-                                     self.vy * 0.10)
+                    -- Arrows inherit their flight direction as knockback.
+                    enemy:TakeDamage(self.damage, self.vx * 0.18,
+                                     self.vy * 0.18)
                     self:DestroySelf()
                     return
                 end
@@ -51,7 +52,7 @@ VillageRimProjectile = {
         if self.transform == nil then
             self.transform = self.actor:GetComponent("Transform")
         end
-        local nx, ny, length = VillageRimShared.Normalize(vx or 1.0, vy or 0.0)
+        local nx, ny, length = Shared.Normalize(vx or 1.0, vy or 0.0)
         if length <= 0.0 then
             nx = 1.0
             ny = 0.0
@@ -85,7 +86,7 @@ VillageRimProjectile = {
         self.sprite.scale_x = 1.15
         self.sprite.scale_y = 1.15
         self.sprite.sorting_order =
-            VillageRimShared.SortOrder(self.transform and self.transform.y or 0.0,
+            Shared.SortOrder(self.transform and self.transform.y or 0.0,
                                        180)
         self.sprite.auto_sorting_order = false
         if self.transform ~= nil then

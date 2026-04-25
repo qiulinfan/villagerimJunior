@@ -4,8 +4,8 @@
       "uid": 1,
       "name": "director",
       "components": {
-        "VillageRimDirector": {
-          "type": "VillageRimDirector",
+        "Director": {
+          "type": "Director",
           "stage_name": "victory"
         }
       }
@@ -14,8 +14,8 @@
       "uid": 2,
       "name": "environment",
       "components": {
-        "VillageRimEnvironment": {
-          "type": "VillageRimEnvironment"
+        "Environment": {
+          "type": "Environment"
         }
       }
     },
@@ -23,8 +23,8 @@
       "uid": 3,
       "name": "hud",
       "components": {
-        "VillageRimHUD": {
-          "type": "VillageRimHUD"
+        "HUD": {
+          "type": "HUD"
         }
       }
     }

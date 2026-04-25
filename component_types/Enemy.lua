@@ -1,4 +1,4 @@
-VillageRimEnemy = {
+Enemy = {
     enemy_kind = "slime",
     health = 1,
     max_health = 1,
@@ -13,7 +13,7 @@ VillageRimEnemy = {
         self.sprite = self.actor:GetComponent("SpriteRenderer")
         self:SetKind(self.enemy_kind)
         self.health_visuals =
-            VillageRimShared.CreateHealthVisuals(math.ceil(self.max_health / 2))
+            Shared.CreateHealthVisuals(math.ceil(self.max_health / 2))
     end,
 
     OnUpdate = function(self)
@@ -38,7 +38,7 @@ VillageRimEnemy = {
             local dy = target:GetPositionY() - self.transform.y
             face_x = dx
             face_y = dy
-            local nx, ny, distance = VillageRimShared.Normalize(dx, dy)
+            local nx, ny, distance = Shared.Normalize(dx, dy)
             if distance <= (self.def.attack_range or 0.35) then
                 self:Attack(target)
             else
@@ -54,13 +54,13 @@ VillageRimEnemy = {
     end,
 
     OnDestroy = function(self)
-        VillageRimShared.DestroyHealthVisuals(self.health_visuals)
+        Shared.DestroyHealthVisuals(self.health_visuals)
     end,
 
     SetKind = function(self, kind)
         self.enemy_kind = kind or "slime"
-        self.def = VillageRimShared.enemy_defs[self.enemy_kind] or
-                       VillageRimShared.enemy_defs.slime
+        self.def = Shared.enemy_defs[self.enemy_kind] or
+                       Shared.enemy_defs.slime
         self.max_health = self.def.max_hp
         self.health = self.def.max_hp
         self.alive = true
@@ -84,13 +84,13 @@ VillageRimEnemy = {
         end
 
         if self.target_kind == "player" then
-            local player = VillageRimShared.GetPlayer()
+            local player = Shared.GetPlayer()
             if player ~= nil and player:IsAlive() then
                 return player
             end
         end
 
-        return VillageRimShared.GetAltar()
+        return Shared.GetAltar()
     end,
 
     Attack = function(self, target)
@@ -109,17 +109,18 @@ VillageRimEnemy = {
 
         self.health = math.max(0, self.health - (amount or 1))
         if self.transform ~= nil then
-            self.transform.x = VillageRimShared.Clamp(
+            -- Apply knockback immediately; these enemies are script-driven, not physics-driven.
+            self.transform.x = Shared.Clamp(
                                    self.transform.x + (knockback_x or 0.0),
                                    -3.1, 3.1)
-            self.transform.y = VillageRimShared.Clamp(
+            self.transform.y = Shared.Clamp(
                                    self.transform.y + (knockback_y or 0.0),
                                    -1.6, 1.6)
         end
 
         if self.health <= 0 then
             self.alive = false
-            VillageRimShared.DestroyHealthVisuals(self.health_visuals)
+            Shared.DestroyHealthVisuals(self.health_visuals)
             self.health_visuals = nil
             Actor.Destroy(self.actor)
         end
@@ -135,7 +136,7 @@ VillageRimEnemy = {
             face_y = move_y
         end
 
-        local row, flip = VillageRimShared.DirectionRow(self.def.direction,
+        local row, flip = Shared.DirectionRow(self.def.direction,
                                                         face_x, face_y)
         local image = self.def.walk
         local columns = self.def.columns or 4
@@ -152,15 +153,15 @@ VillageRimEnemy = {
         self.sprite.scale_x = self.def.scale * flip
         self.sprite.scale_y = self.def.scale
         self.sprite.sorting_order =
-            VillageRimShared.SortOrder(self.transform.y, 70)
+            Shared.SortOrder(self.transform.y, 70)
         self.sprite.auto_sorting_order = false
     end,
 
     UpdateHealth = function(self)
-        VillageRimShared.UpdateHealthVisuals(
+        Shared.UpdateHealthVisuals(
             self.health_visuals, self.transform.x, self.transform.y - 0.38,
-            self.health, self.max_health, 0.52,
-            VillageRimShared.SortOrder(self.transform.y, 340))
+            self.health, self.max_health, 0.62,
+            Shared.SortOrder(self.transform.y, 340))
     end,
 
     IsAlive = function(self)
