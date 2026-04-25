@@ -1,0 +1,21 @@
+{
+  "name": "altar",
+  "components": {
+    "Transform": {
+      "type": "Transform"
+    },
+    "SpriteRenderer": {
+      "type": "SpriteRenderer",
+      "sprite": "altar/altar",
+      "pivot_x": 0.5,
+      "pivot_y": 0.5,
+      "scale_x": 0.8,
+      "scale_y": 0.8,
+      "sorting_order": 0,
+      "auto_sorting_order": false
+    },
+    "VillageRimAltar": {
+      "type": "VillageRimAltar"
+    }
+  }
+}

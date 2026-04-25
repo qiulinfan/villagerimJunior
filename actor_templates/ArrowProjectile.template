@@ -1,0 +1,21 @@
+{
+  "name": "projectile",
+  "components": {
+    "Transform": {
+      "type": "Transform"
+    },
+    "SpriteRenderer": {
+      "type": "SpriteRenderer",
+      "sprite": "Arrow",
+      "pivot_x": 0.5,
+      "pivot_y": 0.5,
+      "scale_x": 1.15,
+      "scale_y": 1.15,
+      "sorting_order": 0,
+      "auto_sorting_order": false
+    },
+    "VillageRimProjectile": {
+      "type": "VillageRimProjectile"
+    }
+  }
+}

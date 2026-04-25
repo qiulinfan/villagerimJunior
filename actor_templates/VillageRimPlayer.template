@@ -1,0 +1,21 @@
+{
+  "name": "player",
+  "components": {
+    "Transform": {
+      "type": "Transform"
+    },
+    "SpriteRenderer": {
+      "type": "SpriteRenderer",
+      "sprite": "Player/Idle",
+      "pivot_x": 0.5,
+      "pivot_y": 0.5,
+      "scale_x": 1.72,
+      "scale_y": 1.72,
+      "sorting_order": 0,
+      "auto_sorting_order": false
+    },
+    "VillageRimPlayer": {
+      "type": "VillageRimPlayer"
+    }
+  }
+}

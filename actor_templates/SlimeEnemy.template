@@ -1,0 +1,22 @@
+{
+  "name": "enemy",
+  "components": {
+    "Transform": {
+      "type": "Transform"
+    },
+    "SpriteRenderer": {
+      "type": "SpriteRenderer",
+      "sprite": "Enemies/Slime/Walk",
+      "pivot_x": 0.5,
+      "pivot_y": 0.5,
+      "scale_x": 1.85,
+      "scale_y": 1.85,
+      "sorting_order": 0,
+      "auto_sorting_order": false
+    },
+    "VillageRimEnemy": {
+      "type": "VillageRimEnemy",
+      "enemy_kind": "slime"
+    }
+  }
+}

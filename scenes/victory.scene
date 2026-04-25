@@ -6,7 +6,7 @@
       "components": {
         "VillageRimDirector": {
           "type": "VillageRimDirector",
-          "stage_name": "main"
+          "stage_name": "victory"
         }
       }
     },
