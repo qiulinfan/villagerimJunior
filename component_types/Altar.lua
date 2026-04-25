@@ -9,13 +9,16 @@ Altar = {
         self.sprite = self.actor:GetComponent("SpriteRenderer")
         self.health = self.max_health
         self.alive = true
-        self.health_visuals =
-            Shared.CreateHealthVisuals(math.ceil(self.max_health / 2))
+        self.is_victory_display = Scene.GetCurrent() == "victory"
+        if not self.is_victory_display then
+            self.health_visuals =
+                Shared.CreateHealthVisuals(math.ceil(self.max_health / 2))
+        end
         self:RefreshSprite()
     end,
 
     OnUpdate = function(self)
-        if self.transform == nil then
+        if self.transform == nil or self.is_victory_display then
             return
         end
         Shared.UpdateHealthVisuals(

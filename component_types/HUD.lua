@@ -9,30 +9,30 @@ HUD = {
 
         local stage = director:GetStage()
         local title = "VillageRimJr"
-        local objective = ""
         if stage ~= nil then
-            title = stage.title or title
-            objective = stage.objective or ""
+            if stage.victory then
+                Text.Draw(stage.title or "The Village Breathes Again", 150,
+                          86, "NotoSans-Regular", 26, 240, 232, 205, 255)
+                Text.Draw(stage.objective or "The rim holds.", 126, 122,
+                          "NotoSans-Regular", 16, 210, 202, 180, 255)
+                return
+            else
+                local attacker_name = stage.attacker_name or "Enemies"
+                title = attacker_name .. " attacking... protect altar!!"
+            end
         end
 
+        -- Keep combat HUD sparse: one status line, one control line.
         Text.Draw(title, 18, 14, "NotoSans-Regular", 23, 20, 30, 18, 255)
-        Text.Draw(objective, 18, 42, "NotoSans-Regular", 15, 28, 38, 24, 255)
 
-        local controls = "WASD move | Space/LMB attack | 1 sword"
+        local controls = "1 sword | left click to attack"
         local state = Shared.GetRunState()
         if state.bow then
             controls = controls .. " | 2 bow"
         end
         if state.shield then
-            controls = controls .. " | RMB/Shift shield"
+            controls = controls .. " | right hold to use shield"
         end
-        controls = controls .. " | R restart"
         Text.Draw(controls, 18, 334, "NotoSans-Regular", 14, 28, 38, 24, 255)
-
-        local message = director:GetMessage()
-        if message ~= nil and message ~= "" then
-            Text.Draw(message, 18, 66, "NotoSans-Regular", 16, 120, 62, 18,
-                      255)
-        end
     end
 }

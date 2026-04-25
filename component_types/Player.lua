@@ -11,16 +11,7 @@ end
 
 local function GetMouseWorldPosition()
     local mouse_position = Input.GetMousePosition()
-    local zoom = math.max(0.01, Camera.GetZoom())
-    local window_width, window_height = Shared.GetWindowSize()
-
-    local world_x = Camera.GetPositionX() +
-                        (mouse_position.x - window_width * 0.5) /
-                        (100.0 * zoom)
-    local world_y = Camera.GetPositionY() +
-                        (mouse_position.y - window_height * 0.5) /
-                        (100.0 * zoom)
-    return world_x, world_y
+    return Shared.ScreenToWorld(mouse_position.x, mouse_position.y)
 end
 
 Player = {
@@ -38,8 +29,10 @@ Player = {
     bow_release_frame = 6,
     bow_projectile_speed = 0.068,
     invulnerable_frames = 38,
+    hurt_frames = 18,
     death_frames = 90,
     hit_radius = 0.18,
+    shield_radius = 0.38,
     stage_name = "",
     facing_x = 1.0,
     facing_y = 0.0,
@@ -58,6 +51,7 @@ Player = {
         self.sprite = self.actor:GetComponent("SpriteRenderer")
 
         local scene_name = Scene.GetCurrent()
+        self.is_victory_display = scene_name == "victory"
         local min_x, max_x, min_y, max_y =
             Shared.GetStageBounds(scene_name)
         local padding = math.max(0.12, self.hit_radius)
@@ -77,14 +71,17 @@ Player = {
         self.alive = true
         self.death_timer = 0
         self.invulnerable_timer = 0
+        self.hurt_timer = 0
         self.attack_timer = 0
         self.attack_kind = ""
         self.attacked_targets = {}
         self.pending_shot_x = 1.0
         self.pending_shot_y = 0.0
 
-        self.health_visuals =
-            Shared.CreateHealthVisuals(math.ceil(self.max_health / 2))
+        if not self.is_victory_display then
+            self.health_visuals =
+                Shared.CreateHealthVisuals(math.ceil(self.max_health / 2))
+        end
         self.shield_visual = Shared.SpawnVisual()
 
         local state = Shared.GetRunState()
@@ -113,10 +110,19 @@ Player = {
         if self.invulnerable_timer > 0 then
             self.invulnerable_timer = self.invulnerable_timer - 1
         end
+        if self.hurt_timer > 0 then
+            self.hurt_timer = self.hurt_timer - 1
+        end
 
         if not self.alive then
             self:UpdateDeath()
             self:UpdateHealthUI()
+            self:UpdateShieldVisual(false)
+            return
+        end
+
+        if self.is_victory_display then
+            self:RenderLocomotionSprite(0.0, 0.0)
             self:UpdateShieldVisual(false)
             return
         end
@@ -161,7 +167,11 @@ Player = {
 
         self:UpdateAttack()
         if self.attack_timer <= 0 then
-            self:RenderLocomotionSprite(move_x, move_y)
+            if self.hurt_timer > 0 then
+                self:RenderDamageSprite()
+            else
+                self:RenderLocomotionSprite(move_x, move_y)
+            end
         end
 
         self:ApplySpriteTint(shield_active)
@@ -345,6 +355,9 @@ Player = {
 
         self.health = math.max(0, self.health - (amount or 1))
         self.invulnerable_timer = self.invulnerable_frames
+        self.hurt_timer = self.hurt_frames
+        self.attack_timer = 0
+        self.attack_kind = ""
         Shared.PlaySfx(15, {"playerDamaged"}, 82)
 
         if self.transform ~= nil then
@@ -410,6 +423,21 @@ Player = {
         self.sprite.auto_sorting_order = false
     end,
 
+    RenderDamageSprite = function(self)
+        local row, flip = Shared.StandardDirectionRow(self.facing_x,
+                                                                self.facing_y)
+        local elapsed = self.hurt_frames - self.hurt_timer
+        local column = math.min(4, 1 + math.floor(elapsed * 4 /
+                                                     self.hurt_frames))
+        self.sprite.sprite = "Player/Damage"
+        self.sprite:SetSpriteCell(row, column)
+        self.sprite.scale_x = self.sprite_scale * flip
+        self.sprite.scale_y = self.sprite_scale
+        self.sprite.sorting_order =
+            Shared.SortOrder(self.transform.y, 80)
+        self.sprite.auto_sorting_order = false
+    end,
+
     ApplySpriteTint = function(self, shield_active)
         if shield_active then
             self.sprite.r = 210
@@ -430,11 +458,16 @@ Player = {
 
     UpdateDeath = function(self)
         self.death_timer = math.max(0, self.death_timer - 1)
+        local row, flip = Shared.StandardDirectionRow(self.facing_x,
+                                                                self.facing_y)
         self.sprite.sprite = "Player/Dead"
-        self.sprite.scale_x = self.sprite_scale
+        self.sprite.scale_x = self.sprite_scale * flip
         self.sprite.scale_y = self.sprite_scale
-        self.sprite:SetSpriteCell(1, math.min(4,
+        self.sprite:SetSpriteCell(row, math.min(4,
             1 + math.floor((self.death_frames - self.death_timer) / 12)))
+        self.sprite.sorting_order =
+            Shared.SortOrder(self.transform.y, 80)
+        self.sprite.auto_sorting_order = false
         self.sprite.r = 255
         self.sprite.g = 255
         self.sprite.b = 255
@@ -442,7 +475,9 @@ Player = {
     end,
 
     UpdateHealthUI = function(self)
-        Shared.UpdateHealthVisuals(self.health_visuals, -2.70, -1.54,
+        -- Keep player health anchored to the screen's top-left corner.
+        local ui_x, ui_y = Shared.ScreenToWorld(104, 42)
+        Shared.UpdateHealthVisuals(self.health_visuals, ui_x, ui_y,
                                              self.health, self.max_health, 0.98,
                                              3200)
     end,
@@ -453,10 +488,11 @@ Player = {
         end
 
         local alpha = shield_active and 230 or 0
-        local x = self.transform.x + self.facing_x * 0.25
-        local y = self.transform.y + self.facing_y * 0.25
+        -- Shield is a body-centered guard, matching the projectile parry logic.
+        local x = self.transform.x
+        local y = self.transform.y
         Shared.SetVisual(self.shield_visual, "shield", 1, 1, x, y,
-                                   1.15, 1.15,
+                                   1.22, 1.22,
                                    Shared.SortOrder(y, 120), alpha)
     end,
 
@@ -470,5 +506,13 @@ Player = {
 
     GetPositionY = function(self)
         return self.transform and self.transform.y or 0.0
+    end,
+
+    GetHitRadius = function(self)
+        return self.hit_radius
+    end,
+
+    GetShieldRadius = function(self)
+        return self.shield_radius
     end
 }

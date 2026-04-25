@@ -13,6 +13,11 @@ Environment = {
                              Shared.stages.main
         end
 
+        if self.stage.black_screen then
+            self:SpawnVictoryBackdrop()
+            return
+        end
+
         self:SpawnCrops()
     end,
 
@@ -55,5 +60,14 @@ Environment = {
                 Shared.SortOrder(y, -60), 230)
             self.decorations[#self.decorations + 1] = visual
         end
+    end,
+
+    SpawnVictoryBackdrop = function(self)
+        local visual = Shared.SpawnVisual()
+        -- A tiny opaque texture scaled up is more reliable than tinting UI frames,
+        -- because many UI sprites have transparent centers or decorative edges.
+        Shared.SetVisual(visual, "victory_black", 1, 1, 0.0, 0.0,
+                         45.0, 45.0, -5000, 255)
+        self.decorations[#self.decorations + 1] = visual
     end
 }

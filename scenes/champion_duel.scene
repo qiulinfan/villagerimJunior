@@ -1,0 +1,32 @@
+{
+  "actors": [
+    {
+      "uid": 1,
+      "name": "director",
+      "components": {
+        "Director": {
+          "type": "Director",
+          "stage_name": "champion_duel"
+        }
+      }
+    },
+    {
+      "uid": 2,
+      "name": "environment",
+      "components": {
+        "Environment": {
+          "type": "Environment"
+        }
+      }
+    },
+    {
+      "uid": 3,
+      "name": "hud",
+      "components": {
+        "HUD": {
+          "type": "HUD"
+        }
+      }
+    }
+  ]
+}

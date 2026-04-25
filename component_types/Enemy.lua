@@ -5,6 +5,7 @@ Enemy = {
     attack_timer = 0,
     attack_cooldown = 0,
     retarget_timer = 0,
+    special_cooldown = 0,
     target_kind = "altar",
     alive = true,
 
@@ -12,8 +13,6 @@ Enemy = {
         self.transform = self.actor:GetComponent("Transform")
         self.sprite = self.actor:GetComponent("SpriteRenderer")
         self:SetKind(self.enemy_kind)
-        self.health_visuals =
-            Shared.CreateHealthVisuals(math.ceil(self.max_health / 2))
     end,
 
     OnUpdate = function(self)
@@ -27,18 +26,23 @@ Enemy = {
         if self.attack_timer > 0 then
             self.attack_timer = self.attack_timer - 1
         end
+        if self.special_cooldown > 0 then
+            self.special_cooldown = self.special_cooldown - 1
+        end
 
         local target = self:ResolveTarget()
         local move_x = 0.0
         local move_y = 0.0
         local face_x = 0.0
         local face_y = 1.0
+        local target_distance = 999.0
         if target ~= nil and target:IsAlive() then
             local dx = target:GetPositionX() - self.transform.x
             local dy = target:GetPositionY() - self.transform.y
             face_x = dx
             face_y = dy
             local nx, ny, distance = Shared.Normalize(dx, dy)
+            target_distance = distance
             if distance <= (self.def.attack_range or 0.35) then
                 self:Attack(target)
             else
@@ -49,12 +53,14 @@ Enemy = {
             end
         end
 
+        self:MaybeUseSpecial(target, face_x, face_y, target_distance)
         self:UpdateSprite(move_x, move_y, face_x, face_y)
-        self:UpdateHealth()
+        self:DrawHealthNumber()
     end,
 
     OnDestroy = function(self)
-        Shared.DestroyHealthVisuals(self.health_visuals)
+        -- Enemy health is drawn as transient text, so there are no child
+        -- visual actors to clean up when the enemy actor is destroyed.
     end,
 
     SetKind = function(self, kind)
@@ -66,6 +72,11 @@ Enemy = {
         self.alive = true
         self.target_kind = self.def.target == "random" and "altar" or
                                self.def.target
+        self.special_cooldown = math.random(
+                                    self.def.special_initial_cooldown_min or
+                                        80,
+                                    self.def.special_initial_cooldown_max or
+                                        130)
     end,
 
     ResolveTarget = function(self)
@@ -99,7 +110,49 @@ Enemy = {
         end
         self.attack_cooldown = self.def.attack_cooldown or 55
         self.attack_timer = 18
-        target:TakeDamage(self.def.damage or 1)
+        local dx = target:GetPositionX() - self.transform.x
+        local dy = target:GetPositionY() - self.transform.y
+        local nx, ny = Shared.Normalize(dx, dy)
+        target:TakeDamage(self.def.damage or 1, nx, ny)
+    end,
+
+    MaybeUseSpecial = function(self, target, face_x, face_y, distance)
+        if self.def.special ~= "sword_wave" or target == nil or
+            not target:IsAlive() then
+            return
+        end
+        if self.special_cooldown > 0 or self.attack_timer > 0 then
+            return
+        end
+        if distance < (self.def.special_min_range or 0.6) then
+            return
+        end
+
+        local nx, ny, length = Shared.Normalize(face_x, face_y)
+        if length <= 0.0 then
+            nx = 1.0
+            ny = 0.0
+        end
+
+        self.attack_timer = self.def.special_attack_timer or 22
+        self.special_cooldown = math.random(
+                                    self.def.special_cooldown_min or 90,
+                                    self.def.special_cooldown_max or 150)
+
+        local actor = Actor.Instantiate("SwordWaveProjectile")
+        if actor == nil then
+            return
+        end
+
+        local projectile = actor:GetComponent("Projectile")
+        if projectile ~= nil then
+            projectile:LaunchSwordWave(self.transform.x + nx * 0.34,
+                                       self.transform.y + ny * 0.34,
+                                       nx, ny,
+                                       self.def.special_damage or 2,
+                                       self.def.special_speed or 0.045)
+        end
+        Shared.PlaySfx(16, {"goblinsaint_swordwave"}, 88)
     end,
 
     TakeDamage = function(self, amount, knockback_x, knockback_y)
@@ -120,8 +173,6 @@ Enemy = {
 
         if self.health <= 0 then
             self.alive = false
-            Shared.DestroyHealthVisuals(self.health_visuals)
-            self.health_visuals = nil
             Actor.Destroy(self.actor)
         end
     end,
@@ -139,12 +190,13 @@ Enemy = {
         local row, flip = Shared.DirectionRow(self.def.direction,
                                                         face_x, face_y)
         local image = self.def.walk
-        local columns = self.def.columns or 4
+        local columns = self.def.walk_columns or self.def.columns or 4
         if self.attack_timer > 0 then
             image = self.def.attack
+            columns = self.def.attack_columns or columns
         elseif math.abs(move_x) <= 0.0001 and math.abs(move_y) <= 0.0001 then
             image = self.def.idle
-            columns = math.min(columns, 4)
+            columns = self.def.idle_columns or math.min(columns, 4)
         end
 
         local column = (math.floor(Application.GetFrame() / 8) % columns) + 1
@@ -157,11 +209,22 @@ Enemy = {
         self.sprite.auto_sorting_order = false
     end,
 
-    UpdateHealth = function(self)
-        Shared.UpdateHealthVisuals(
-            self.health_visuals, self.transform.x, self.transform.y - 0.38,
-            self.health, self.max_health, 0.62,
-            Shared.SortOrder(self.transform.y, 340))
+    DrawHealthNumber = function(self)
+        if self.transform == nil then
+            return
+        end
+
+        local text = tostring(math.max(0, self.health)) .. "/" ..
+                         tostring(math.max(1, self.max_health))
+        local screen_x, screen_y =
+            Shared.WorldToScreen(self.transform.x, self.transform.y - 0.52)
+        local text_x = screen_x - (#text * 3.5)
+
+        -- Draw a tiny shadow first; direct numeric labels need contrast over crops.
+        Text.Draw(text, text_x + 1, screen_y + 1, "NotoSans-Regular", 13,
+                  24, 18, 14, 210)
+        Text.Draw(text, text_x, screen_y, "NotoSans-Regular", 13,
+                  250, 238, 198, 255)
     end,
 
     IsAlive = function(self)
@@ -178,5 +241,13 @@ Enemy = {
 
     GetHitRadius = function(self)
         return self.def and self.def.hit_radius or 0.25
+    end,
+
+    GetKind = function(self)
+        return self.enemy_kind
+    end,
+
+    IsBoss = function(self)
+        return self.def ~= nil and self.def.is_boss == true
     end
 }

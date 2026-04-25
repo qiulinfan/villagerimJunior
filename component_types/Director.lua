@@ -37,6 +37,10 @@ Director = {
         if self.stage_name == "goblin_raid" then
             run_state.bow = true
             run_state.weapon = "bow"
+        elseif self.stage_name == "champion_duel" then
+            run_state.bow = true
+            run_state.shield = true
+            run_state.weapon = "sword"
         elseif self.stage_name == "victory" then
             run_state.bow = true
             run_state.shield = true
@@ -85,7 +89,12 @@ Director = {
         if self:AllWavesFinished() and self:LiveEnemyCount() == 0 then
             if not self.stage_clear then
                 self.stage_clear = true
-                self.message = "Wave cleared. Claim the reward."
+                if self.stage.reward ~= nil and self.stage.reward ~= "" then
+                    self.message = "Wave cleared. Claim the reward."
+                else
+                    self.message = "Victory. Moving on..."
+                    self.transition_timer = 95
+                end
             end
             if not self.reward_spawned then
                 self:SpawnReward()
@@ -107,7 +116,7 @@ Director = {
             end
         end
 
-        if not self.stage.victory then
+        if not self.stage.victory or self.stage.show_player then
             local player = Actor.Instantiate("Player")
             if player ~= nil then
                 local transform = player:GetComponent("Transform")
@@ -148,6 +157,8 @@ Director = {
         local template = "SlimeEnemy"
         if kind == "spear" then
             template = "SpearGoblin"
+        elseif kind == "champion" then
+            template = "GoblinSwordSaint"
         end
 
         local actor = Actor.Instantiate(template)
@@ -215,7 +226,7 @@ Director = {
         if kind == "bow" then
             self.message = "Bow acquired. Moving to the goblin raid..."
         elseif kind == "shield" then
-            self.message = "Shield acquired. The village survives..."
+            self.message = "Shield acquired. Face the Sword Saint..."
         else
             self.message = "Reward acquired."
         end

@@ -18,6 +18,7 @@ Shared.crop_cells = {
 Shared.stages = {
     main = {
         title = "Stage 1: Slime Garden",
+        attacker_name = "Slimes",
         objective = "Protect the altar. Clear the slime wave, then pick up the bow.",
         music = {"main", "Village Under Siege"},
         reward = "bow",
@@ -48,10 +49,11 @@ Shared.stages = {
     },
     goblin_raid = {
         title = "Stage 2: Goblin Raid",
+        attacker_name = "Goblins",
         objective = "Goblins switch targets between you and the altar. Survive, then claim the shield.",
         music = {"invasion", "Village Under Siege"},
         reward = "shield",
-        next_scene = "victory",
+        next_scene = "champion_duel",
         -- Goblin stages can be busier, but still leave combat space readable.
         decoration_count = 49,
         altar_x = 0.18,
@@ -76,14 +78,34 @@ Shared.stages = {
             }}
         }
     },
+    champion_duel = {
+        title = "Stage 3: Sword Saint Duel",
+        attacker_name = "Goblin Sword Saint",
+        objective = "Use the shield to reflect sword waves and end the invasion.",
+        music = {"GoblinSwordSaint"},
+        next_scene = "victory",
+        -- Boss arenas should stay readable so projectile parries are fair.
+        decoration_count = 36,
+        altar_x = 0.0,
+        altar_y = 0.02,
+        player_x = 0.0,
+        player_y = 0.98,
+        waves = {
+            {frame = 45, spawns = {
+                {kind = "champion", x = 0.0, y = -1.10}
+            }}
+        }
+    },
     victory = {
         title = "The Village Breathes Again",
         objective = "Chapter 3 will open later. For now, the rim holds.",
         music = {"victory"},
-        -- Victory is calmer gameplay-wise, so it can carry a little more set dressing.
-        decoration_count = 57,
-        altar_x = 0.0,
-        altar_y = 0.08,
+        black_screen = true,
+        show_player = true,
+        altar_x = 0.52,
+        altar_y = 0.02,
+        player_x = -0.52,
+        player_y = 0.08,
         victory = true
     }
 }
@@ -118,6 +140,33 @@ Shared.enemy_defs = {
         target = "random",
         columns = 6,
         direction = "standard"
+    },
+    champion = {
+        walk = "Enemies/GoblinSwordSaint/Walk",
+        idle = "Enemies/GoblinSwordSaint/Idle",
+        attack = "Enemies/GoblinSwordSaint/Attack",
+        max_hp = 18,
+        damage = 2,
+        speed = 0.020,
+        scale = 1.65,
+        attack_range = 0.48,
+        attack_cooldown = 42,
+        hit_radius = 0.30,
+        target = "player",
+        walk_columns = 6,
+        idle_columns = 2,
+        attack_columns = 9,
+        direction = "standard",
+        is_boss = true,
+        special = "sword_wave",
+        special_damage = 2,
+        special_speed = 0.046,
+        special_min_range = 0.62,
+        special_attack_timer = 24,
+        special_initial_cooldown_min = 65,
+        special_initial_cooldown_max = 105,
+        special_cooldown_min = 85,
+        special_cooldown_max = 145
     }
 }
 
@@ -175,6 +224,24 @@ end
 
 function Shared.GetStageBounds(scene_name)
     return -3.12, 3.12, -1.72, 1.72
+end
+
+function Shared.WorldToScreen(x, y)
+    local zoom = math.max(0.01, Camera.GetZoom())
+    local window_width, window_height = Shared.GetWindowSize()
+    -- Text.Draw is screen-space, so enemy labels need the same camera mapping
+    -- that player mouse aiming uses in reverse.
+    return (x - Camera.GetPositionX()) * 100.0 * zoom + window_width * 0.5,
+           (y - Camera.GetPositionY()) * 100.0 * zoom + window_height * 0.5
+end
+
+function Shared.ScreenToWorld(x, y)
+    local zoom = math.max(0.01, Camera.GetZoom())
+    local window_width, window_height = Shared.GetWindowSize()
+    return Camera.GetPositionX() + (x - window_width * 0.5) /
+               (100.0 * zoom),
+           Camera.GetPositionY() + (y - window_height * 0.5) /
+               (100.0 * zoom)
 end
 
 function Shared.AnimationFrame(frame_count, frame_stride)
@@ -356,15 +423,15 @@ function Shared.UpdateHealthVisuals(visuals, x, y, health_units,
     end
     local slots = math.max(1, math.ceil(max_health_units / 2))
     local visual_scale = scale or 1.0
-    local spacing = 0.27 * visual_scale
+    local spacing = 0.21 * visual_scale
     local start_x = x - ((slots - 1) * spacing) * 0.5
     -- The border sprite is one frame, so stretch it to the active heart count.
     local background_width =
-        math.max(1.05 * visual_scale,
-                 ((slots - 1) * spacing) + (0.52 * visual_scale))
+        math.max(1.16 * visual_scale,
+                 ((slots - 1) * spacing) + (0.68 * visual_scale)) * 1.5
     Shared.SetVisual(visuals.background, "UI/0.2.png", 2, 5,
                                x, y, background_width,
-                               0.64 * visual_scale, order or 1500, 235)
+                               0.86 * visual_scale, order or 1500, 235)
     for index = 1, #visuals.hearts do
         local alpha = 255
         if index > slots then

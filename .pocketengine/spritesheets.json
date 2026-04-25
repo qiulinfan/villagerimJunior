@@ -1,8 +1,36 @@
 {
     "spritesheets": {
+        "images/UI/Bars.png": {
+            "rows": 10,
+            "columns": 12
+        },
+        "images/Summer Crops.png": {
+            "rows": 26,
+            "columns": 15
+        },
+        "images/Player/Sword.png": {
+            "rows": 3,
+            "columns": 10
+        },
+        "images/Player/Run.png": {
+            "rows": 3,
+            "columns": 8
+        },
+        "images/UI/0.2.png": {
+            "rows": 4,
+            "columns": 5
+        },
+        "images/Player/Idle.png": {
+            "rows": 3,
+            "columns": 4
+        },
         "images/Arrow.png": {
             "rows": 3,
             "columns": 12
+        },
+        "images/Player/Bow and Arrow.png": {
+            "rows": 3,
+            "columns": 7
         },
         "images/Enemies/Slime/Attack.png": {
             "rows": 3,
@@ -12,49 +40,49 @@
             "rows": 3,
             "columns": 4
         },
+        "images/Enemies/Spear Goblin/Idle.png": {
+            "rows": 3,
+            "columns": 4
+        },
+        "images/Player/Damage.png": {
+            "rows": 3,
+            "columns": 4
+        },
+        "images/Enemies/GoblinSwordSaint/Death.png": {
+            "rows": 3,
+            "columns": 6
+        },
         "images/Enemies/Slime/Walk.png": {
             "rows": 3,
             "columns": 4
         },
-        "images/Enemies/Spear Goblin/Idle.png": {
+        "images/Enemies/GoblinSwordSaint/Idle.png": {
             "rows": 3,
-            "columns": 4
+            "columns": 2
         },
         "images/Enemies/Spear Goblin/Spear.png": {
             "rows": 3,
             "columns": 6
         },
+        "images/Player/Dead.png": {
+            "rows": 3,
+            "columns": 4
+        },
+        "images/Enemies/GoblinSwordSaint/Attack.png": {
+            "rows": 3,
+            "columns": 9
+        },
         "images/Enemies/Spear Goblin/Walk.png": {
             "rows": 3,
             "columns": 6
         },
-        "images/Player/Bow and Arrow.png": {
+        "images/Enemies/GoblinSwordSaint/Walk.png": {
             "rows": 3,
-            "columns": 7
+            "columns": 6
         },
-        "images/Player/Idle.png": {
-            "rows": 3,
-            "columns": 4
-        },
-        "images/Player/Run.png": {
-            "rows": 3,
-            "columns": 8
-        },
-        "images/Player/Sword.png": {
-            "rows": 3,
-            "columns": 10
-        },
-        "images/Summer Crops.png": {
-            "rows": 26,
-            "columns": 15
-        },
-        "images/UI/0.2.png": {
-            "rows": 4,
-            "columns": 5
-        },
-        "images/UI/Bars.png": {
-            "rows": 10,
-            "columns": 12
+        "images/Enemies/GoblinSwordSaint/YellowFIRE.png": {
+            "rows": 7,
+            "columns": 20
         }
     }
 }
