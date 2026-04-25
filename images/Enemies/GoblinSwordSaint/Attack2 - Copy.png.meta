@@ -1,0 +1,754 @@
+fileFormatVersion: 2
+guid: bc79de13aafe0c44cb6447b76eefb6b1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3636216219760368474
+    second: Attack2 - Copy_0
+  - first:
+      213: -1830548150041067
+    second: Attack2 - Copy_1
+  - first:
+      213: 801797430479566017
+    second: Attack2 - Copy_2
+  - first:
+      213: 762446105423235985
+    second: Attack2 - Copy_3
+  - first:
+      213: 5396191259609289962
+    second: Attack2 - Copy_4
+  - first:
+      213: 2004372424690003045
+    second: Attack2 - Copy_5
+  - first:
+      213: -1371856930110570431
+    second: Attack2 - Copy_6
+  - first:
+      213: -3368494224174968321
+    second: Attack2 - Copy_7
+  - first:
+      213: -6639615248534642108
+    second: Attack2 - Copy_8
+  - first:
+      213: -5215033472605901479
+    second: Attack2 - Copy_9
+  - first:
+      213: -6309187319264987723
+    second: Attack2 - Copy_10
+  - first:
+      213: 1938459266383968035
+    second: Attack2 - Copy_11
+  - first:
+      213: 561174197087185581
+    second: Attack2 - Copy_12
+  - first:
+      213: 371256015601154119
+    second: Attack2 - Copy_13
+  - first:
+      213: 5309224123381760
+    second: Attack2 - Copy_14
+  - first:
+      213: -4659663438994423391
+    second: Attack2 - Copy_15
+  - first:
+      213: -1542425054327418977
+    second: Attack2 - Copy_16
+  - first:
+      213: -7431989956000054442
+    second: Attack2 - Copy_17
+  - first:
+      213: 8754670931096451116
+    second: Attack2 - Copy_18
+  - first:
+      213: 8792396703507284854
+    second: Attack2 - Copy_19
+  - first:
+      213: -5643821667361005755
+    second: Attack2 - Copy_20
+  - first:
+      213: 3936357166411894369
+    second: Attack2 - Copy_21
+  - first:
+      213: -2931910401046636148
+    second: Attack2 - Copy_22
+  - first:
+      213: 2312012588594676031
+    second: Attack2 - Copy_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Attack2 - Copy_0
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 121
+        width: 21
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 2, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a46ba61d90998dc0800000000000000
+      internalID: -3636216219760368474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_1
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 101
+        width: 29
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 516c5cb402f79fff0800000000000000
+      internalID: -1830548150041067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_2
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 101
+        width: 34
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c43e81d38e802b00800000000000000
+      internalID: 801797430479566017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_3
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 99
+        width: 39
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19bc12a71b0c49a00800000000000000
+      internalID: 762446105423235985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_4
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 99
+        width: 50
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae454114c5f13ea40800000000000000
+      internalID: 5396191259609289962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_5
+      rect:
+        serializedVersion: 2
+        x: 245
+        y: 99
+        width: 39
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56c6c33c916f0db10800000000000000
+      internalID: 2004372424690003045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_6
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 99
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1400a16f36f26fce0800000000000000
+      internalID: -1371856930110570431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_7
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 99
+        width: 31
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff19814a954b041d0800000000000000
+      internalID: -3368494224174968321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_8
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 99
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44263d11c195bd3a0800000000000000
+      internalID: -6639615248534642108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_9
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 51
+        width: 25
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95dad85efaa70a7b0800000000000000
+      internalID: -5215033472605901479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_10
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 51
+        width: 35
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b5bfc58f834178a0800000000000000
+      internalID: -6309187319264987723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_11
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 51
+        width: 30
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3277160be6ac6ea10800000000000000
+      internalID: 1938459266383968035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_12
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 51
+        width: 45
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daa2f7285f0b9c700800000000000000
+      internalID: 561174197087185581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_13
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 51
+        width: 47
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74832a21167f62500800000000000000
+      internalID: 371256015601154119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_14
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 51
+        width: 44
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00838e116bcd21000800000000000000
+      internalID: 5309224123381760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_15
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 51
+        width: 25
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a1ccd94acc855fb0800000000000000
+      internalID: -4659663438994423391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_16
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 3
+        width: 33
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9fc620d594389ae0800000000000000
+      internalID: -1542425054327418977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_17
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 3
+        width: 42
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 653885ae2844cd890800000000000000
+      internalID: -7431989956000054442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_18
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 3
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c28317dd3d6de7970800000000000000
+      internalID: 8754670931096451116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_19
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 3
+        width: 49
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6730edcb73ed40a70800000000000000
+      internalID: 8792396703507284854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_20
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 3
+        width: 49
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54f5b45881e1da1b0800000000000000
+      internalID: -5643821667361005755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_21
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 3
+        width: 48
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16e4b05bcffb0a630800000000000000
+      internalID: 3936357166411894369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_22
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 3
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8997503603cf47d0800000000000000
+      internalID: -2931910401046636148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack2 - Copy_23
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 2
+        width: 42
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f31ca63233be51020800000000000000
+      internalID: 2312012588594676031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: bb5598a1c2a66ff4ca58ae47a73b1857
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Attack2 - Copy_0: -3636216219760368474
+      Attack2 - Copy_1: -1830548150041067
+      Attack2 - Copy_10: -6309187319264987723
+      Attack2 - Copy_11: 1938459266383968035
+      Attack2 - Copy_12: 561174197087185581
+      Attack2 - Copy_13: 371256015601154119
+      Attack2 - Copy_14: 5309224123381760
+      Attack2 - Copy_15: -4659663438994423391
+      Attack2 - Copy_16: -1542425054327418977
+      Attack2 - Copy_17: -7431989956000054442
+      Attack2 - Copy_18: 8754670931096451116
+      Attack2 - Copy_19: 8792396703507284854
+      Attack2 - Copy_2: 801797430479566017
+      Attack2 - Copy_20: -5643821667361005755
+      Attack2 - Copy_21: 3936357166411894369
+      Attack2 - Copy_22: -2931910401046636148
+      Attack2 - Copy_23: 2312012588594676031
+      Attack2 - Copy_3: 762446105423235985
+      Attack2 - Copy_4: 5396191259609289962
+      Attack2 - Copy_5: 2004372424690003045
+      Attack2 - Copy_6: -1371856930110570431
+      Attack2 - Copy_7: -3368494224174968321
+      Attack2 - Copy_8: -6639615248534642108
+      Attack2 - Copy_9: -5215033472605901479
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
