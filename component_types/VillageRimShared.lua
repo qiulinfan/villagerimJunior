@@ -156,6 +156,27 @@ function VillageRimShared.Clamp(value, minimum, maximum)
     return value
 end
 
+function VillageRimShared.GetWindowSize()
+    local window_width = 640
+    local window_height = 360
+    if Application ~= nil and Application.GetWindowWidth ~= nil then
+        window_width = math.max(1, Application.GetWindowWidth())
+    end
+    if Application ~= nil and Application.GetWindowHeight ~= nil then
+        window_height = math.max(1, Application.GetWindowHeight())
+    end
+    return window_width, window_height
+end
+
+function VillageRimShared.GetStageBounds(scene_name)
+    return -3.12, 3.12, -1.72, 1.72
+end
+
+function VillageRimShared.AnimationFrame(frame_count, frame_stride)
+    return 1 + (math.floor(Application.GetFrame() / frame_stride) %
+                   frame_count)
+end
+
 function VillageRimShared.Distance(ax, ay, bx, by)
     local dx = bx - ax
     local dy = by - ay

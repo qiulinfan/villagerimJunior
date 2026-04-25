@@ -65,8 +65,14 @@ VillageRimProjectile = {
         if self.transform ~= nil then
             self.transform.x = x or 0.0
             self.transform.y = y or 0.0
+            self.transform.rotation = self:DirectionToRotation(nx, ny)
         end
         self:UpdateSprite()
+    end,
+
+    DirectionToRotation = function(self, vx, vy)
+        -- Arrow.png [1,1] points down. Rotate that one sprite toward velocity.
+        return math.deg(math.atan(vy, vx)) - 90.0
     end,
 
     UpdateSprite = function(self)
@@ -74,16 +80,17 @@ VillageRimProjectile = {
             return
         end
 
-        local row, flip = VillageRimShared.StandardDirectionRow(self.vx, self.vy)
-        local column = (math.floor(Application.GetFrame() / 4) % 12) + 1
         self.sprite.sprite = "Arrow"
-        self.sprite:SetSpriteCell(row, column)
-        self.sprite.scale_x = 1.15 * flip
+        self.sprite:SetSpriteCell(1, 1)
+        self.sprite.scale_x = 1.15
         self.sprite.scale_y = 1.15
         self.sprite.sorting_order =
             VillageRimShared.SortOrder(self.transform and self.transform.y or 0.0,
                                        180)
         self.sprite.auto_sorting_order = false
+        if self.transform ~= nil then
+            self.transform.rotation = self:DirectionToRotation(self.vx, self.vy)
+        end
     end,
 
     DestroySelf = function(self)
